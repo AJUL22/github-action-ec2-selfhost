@@ -1,18 +1,19 @@
-name: Maven CI/CD — Build, Test, Deploy to GitHub Packages
+name: Build-Test-Release
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    tags:
+      - 'v*'        # create release when you push a tag like v1.0.0
+  workflow_dispatch:
+
+permissions:
+  contents: write   # required to create releases
 
 jobs:
   build:
-    name: Build
     runs-on: aju
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -21,65 +22,27 @@ jobs:
           java-version: '17'
           cache: maven
 
-      - name: Build project (skip tests)
-        run: mvn -B -DskipTests package
+      - name: Build & Test
+        run: mvn -B -V clean verify
 
-  test:
-    name: Test
-    runs-on: aju
+      - name: Upload artifact for release step
+        uses: actions/upload-artifact@v4
+        with:
+          name: built-jar
+          path: target/*.jar
+
+  release:
     needs: build
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
-          cache: maven
-
-      - name: Run unit tests
-        run: mvn -B test
-
-  deploy:
-    name: Deploy to GitHub Packages
     runs-on: aju
-    needs: test
-    if: github.ref == 'refs/heads/main'
-    permissions:
-      contents: read
-      packages: write
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - uses: actions/download-artifact@v4
         with:
-          distribution: temurin
-          java-version: '17'
-          cache: maven
+          name: built-jar
+          path: dist/
 
-      - name: Create settings.xml for Maven
+      - name: Create GitHub Release and attach JAR
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/*.jar
         env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-        run: |
-          mkdir -p $HOME/.m2
-          cat > $HOME/.m2/settings.xml <<SETTINGS
-          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
-                                        https://maven.apache.org/xsd/settings-1.0.0.xsd">
-            <servers>
-              <server>
-                <id>github</id>
-                <username>${MAVEN_USERNAME}</username>
-                <password>${MAVEN_PASSWORD}</password>
-              </server>
-            </servers>
-          </settings>
-          SETTINGS
-      - name: Deploy package to GitHub Packages
-        run: mvn -B deploy --settings $HOME/.m2/settings.xml
+          GITHUB_TOKEN: ${{ secrets.MAVEN_PASSWORD }}
