@@ -79,21 +79,21 @@
     </build>
 
     <!-- ✅ Deployment Configuration for GitHub Packages -->
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub OWNER Apache Maven Packages</name>
-            <url>https://github.com/AJUL22/github-action-ec2-selfhost.git</url>
-        </repository>
-    </distributionManagement>
+<distributionManagement>
+    <repository>
+        <id>github</id>
+        <name>GitHub Packages</name>
+        <url>https://maven.pkg.github.com/AJUL22/github-action-ec2-selfhost</url>
+    </repository>
+</distributionManagement>
 
-    <!-- ✅ Repository declaration (required to read/write metadata) -->
-    <repositories>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://github.com/AJUL22/github-action-ec2-selfhost.git</url>
-        </repository>
-    </repositories>
+<repositories>
+    <repository>
+        <id>github</id>
+        <name>GitHub Packages</name>
+        <url>https://maven.pkg.github.com/AJUL22/github-action-ec2-selfhost</url>
+    </repository>
+</repositories>
+
 
 </project>
