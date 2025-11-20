@@ -1,7 +1,1 @@
-<servers>
-  <server>
-    <id>github</id>
-    <username>AJUL22</username>
-    <password>${env.GITHUB_TOKEN}</password>
-  </server>
-</servers>
+
