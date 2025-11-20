@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
@@ -11,8 +11,9 @@
     <packaging>jar</packaging>
 
     <name>Maven GitHub Actions Lab</name>
-    <description>A simple Maven project with unit testing for GitHub Actions CI/CD and GitHub Packages</description>
+    <description>Java + Maven + GitHub Actions CI/CD + GitHub Packages</description>
 
+    <!-- Java + JUnit -->
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -20,9 +21,8 @@
         <junit.jupiter.version>5.9.3</junit.jupiter.version>
     </properties>
 
-    <!-- Dependencies -->
     <dependencies>
-        <!-- ✅ JUnit 5 for testing -->
+        <!-- JUnit 5 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -31,31 +31,27 @@
         </dependency>
     </dependencies>
 
-    <!-- Build section -->
     <build>
         <plugins>
-            <!-- ✅ Compiler Plugin -->
+            <!-- Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.10.1</version>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
 
-            <!-- ✅ Surefire Plugin for unit tests -->
+            <!-- Run tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
-                <configuration>
-                    <useSystemClassLoader>true</useSystemClassLoader>
-                </configuration>
             </plugin>
 
-            <!-- ✅ Jar Plugin to define main class -->
+            <!-- Create JAR with main class -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -68,32 +64,24 @@
                     </archive>
                 </configuration>
             </plugin>
-
-            <!-- ✅ Deploy Plugin (optional explicit version) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.2</version>
-            </plugin>
         </plugins>
     </build>
 
-    <!-- ✅ Deployment Configuration for GitHub Packages -->
-<distributionManagement>
-    <repository>
-        <id>github</id>
-        <name>GitHub Packages</name>
-        <url>https://maven.pkg.github.com/AJUL22/github-action-ec2-selfhost</url>
-    </repository>
-</distributionManagement>
+    <!-- 🔥 Correct GitHub Packages Config -->
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/AJUL22/YOUR_REPO_NAME</url>
+        </repository>
+    </distributionManagement>
 
-<repositories>
-    <repository>
-        <id>github</id>
-        <name>GitHub Packages</name>
-        <url>https://maven.pkg.github.com/AJUL22/github-action-ec2-selfhost</url>
-    </repository>
-</repositories>
-
+    <repositories>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/AJUL22/YOUR_REPO_NAME</url>
+        </repository>
+    </repositories>
 
 </project>
